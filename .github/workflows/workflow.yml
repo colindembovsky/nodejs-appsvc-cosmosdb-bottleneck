@@ -1,32 +1,27 @@
-# This is a basic workflow to help you get started with Actions
-
 name: Sample App deploy
 
-# Controls when the workflow will run
 on:
   push:
-      branches:
-        - main
+    branches:
+    - main
+  workflow_dispatch:
 
 env:
-  AZURE_WEBAPP_NAME: "<Name of your webapp>"    # set this to your application's name
-  LOAD_TEST_RESOURCE: "<Name of your load test resource>"
-  LOAD_TEST_RESOURCE_GROUP: "<Name of your load test resource group>"
-  AZURE_WEBAPP_PACKAGE_PATH: '.'      # set this to the path to your web app project, defaults to the repository root
-  NODE_VERSION: '14.15.1'                # set this to the node version to use
-  LOCATION: "West US"
-  APPINSIGHTLOCATION: "West US"
-  DATABASEACCOUNTLOCATION: "westus"
+  AZURE_WEBAPP_NAME: "cdloadtestwebapp"
+  LOAD_TEST_RESOURCE: "cdloadtest"
+  LOAD_TEST_RESOURCE_GROUP: "cdloadtest"
+  AZURE_WEBAPP_PACKAGE_PATH: '.'
+  NODE_VERSION: '14.15.1'
+  LOCATION: "southcentralus"
+  APPINSIGHTLOCATION: "southcentralus"
+  DATABASEACCOUNTLOCATION: "southcentralus"
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   build-and-deploy:
-    # The type of runner that the job will run on
     runs-on: ubuntu-latest
+    environment: dev
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Checkout GitHub Actions 
         uses: actions/checkout@v2
         
@@ -36,7 +31,6 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
           
-    # Deploy Arm template
       - name: Deploy ARM Template
         uses: azure/powershell@v1
         continue-on-error: false
@@ -62,6 +56,7 @@ jobs:
     name: Load Test
     needs: build-and-deploy
     runs-on: ubuntu-latest
+    environment: dev
     steps:
       - name: Checkout GitHub Actions 
         uses: actions/checkout@v2
