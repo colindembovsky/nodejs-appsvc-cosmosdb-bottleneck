@@ -6,6 +6,9 @@ on:
     - main
   workflow_dispatch:
 
+permissions:
+  id-token: write
+
 env:
   AZURE_WEBAPP_NAME: "cdloadtestwebapp"
   LOAD_TEST_RESOURCE: "cdloadtest"
